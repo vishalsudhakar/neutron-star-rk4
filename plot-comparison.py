@@ -37,17 +37,10 @@ from matplotlib import rcParams
 
 from EOSNeutronStars import run
 
-# ---------------------------------------------------------------------------
-# Paths to saved .npy data
-# ---------------------------------------------------------------------------
-
 _HERE       = os.path.dirname(os.path.abspath(__file__))
 _CUBIC_DIR  = os.path.join(_HERE, 'tabulated-plot-data', 'cubic_interp_test')
 _LINEAR_DIR = os.path.join(_HERE, 'tabulated-plot-data', 'linear_interp_test')
 
-# ---------------------------------------------------------------------------
-# Load AV14+UVII tabulated-interpolation results from disk
-# ---------------------------------------------------------------------------
 
 av14_cubic = {
     'cd': np.load(os.path.join(_CUBIC_DIR,  'cd.npy')),
@@ -61,12 +54,6 @@ av14_linear = {
     'r' : np.load(os.path.join(_LINEAR_DIR, 'r.npy')),
 }
 
-# ---------------------------------------------------------------------------
-# Compute solutions via EOSNeutronStars
-#   AV14+UVII  i=1  t0=0.5  (analytic)
-#   APR        i=4  t0=0.5  (cubic and linear)
-#   RG         i=5  t0=0.5  (cubic and linear)
-# ---------------------------------------------------------------------------
 
 def _compute(i, t0, interp):
     '''Run the solver for EOS index i with the given interpolation method.'''
@@ -87,10 +74,6 @@ rg_cubic    = _compute(i=5, t0=0.5,   interp='cubic')
 rg_linear   = _compute(i=5, t0=0.5,   interp='linear')
 
 print("\nAll solutions ready. Generating plot...\n")
-
-# ---------------------------------------------------------------------------
-# Publication rcParams  (no LaTeX installation required)
-# ---------------------------------------------------------------------------
 
 rcParams.update({
     'text.usetex'        : False,
@@ -206,10 +189,6 @@ CURVES = [
     },
 ]
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
 def _legend_handles():
     return [
         mlines.Line2D([], [], color=c['color'], linestyle=c['ls'],
@@ -220,18 +199,13 @@ def _legend_handles():
 def _apply_minor_ticks(ax):
     ax.minorticks_on()
 
-# ---------------------------------------------------------------------------
-# Single figure — three panels side by side
-# ---------------------------------------------------------------------------
 
 fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 5))
 
-# Panel labels (a), (b), (c)
 for ax, letter in zip((ax1, ax2, ax3), ('(a)', '(b)', '(c)')):
     ax.text(0.04, 0.96, letter, transform=ax.transAxes,
             fontsize=11, va='top', ha='left')
 
-# --- Panel (a): Mass vs. central baryon density ---
 for c in CURVES:
     ax1.plot(c['data']['cd'], c['data']['m'],
              color=c['color'], linestyle=c['ls'],
@@ -243,7 +217,6 @@ ax1.set_xlim([0, 2.5])
 ax1.set_ylim([0, 3])
 _apply_minor_ticks(ax1)
 
-# --- Panel (b): Radius vs. central baryon density ---
 for c in CURVES:
     ax2.plot(c['data']['cd'], c['data']['r'],
              color=c['color'], linestyle=c['ls'],
@@ -255,7 +228,6 @@ ax2.set_xlim([0, 2.5])
 ax2.set_ylim([0, 15])
 _apply_minor_ticks(ax2)
 
-# --- Panel (c): Mass vs. radius ---
 for c in CURVES:
     ax3.plot(c['data']['r'], c['data']['m'],
              color=c['color'], linestyle=c['ls'],
@@ -267,7 +239,6 @@ ax3.set_xlim([6, 20])
 ax3.set_ylim([0, 3])
 _apply_minor_ticks(ax3)
 
-# Shared legend — two rows below all panels so seven entries don't crowd
 fig.legend(
     handles=_legend_handles(),
     loc='lower center',
@@ -280,9 +251,5 @@ fig.legend(
 fig.tight_layout()
 fig.savefig('interp_comparison.pdf', bbox_inches='tight')
 print("Saved: interp_comparison.pdf")
-
-# ---------------------------------------------------------------------------
-# Display
-# ---------------------------------------------------------------------------
 
 plt.show()

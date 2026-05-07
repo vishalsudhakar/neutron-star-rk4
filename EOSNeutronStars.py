@@ -39,20 +39,14 @@ from interpolator import (
     d2E_dn2_cubic_interpolated,
 )
 
-# ---------------------------------------------------------------------------
 # Fundamental constants
-# ---------------------------------------------------------------------------
-
 h_c             = 1240                          # MeV fm
 hbar_c          = h_c / (2 * np.pi)            # MeV fm
 m_n             = 939.565                       # MeV / c^2
 c_energydensity = (np.pi**2 * m_n**4) / h_c**3 # Characteristic energy density [MeV fm^-3]
 
 
-# ---------------------------------------------------------------------------
 # Equations of State
-# ---------------------------------------------------------------------------
-
 class EOS:
     '''
     Defines the Equations of State (EOS) and their first and second derivatives
@@ -177,10 +171,7 @@ class EOS:
         return func   # MeV fm^6
 
 
-# ---------------------------------------------------------------------------
 # Relativistic Hydrodynamical Equations
-# ---------------------------------------------------------------------------
-
 class HydrodynamicalEquations:
     '''
     Encapsulates the Tolman–Oppenheimer–Volkoff (TOV) equations and the
@@ -385,10 +376,7 @@ class HydrodynamicalEquations:
         return (self.n(t0), Ri * 13.69, ui * 9.29)
 
 
-# ---------------------------------------------------------------------------
 # Run & plot
-# ---------------------------------------------------------------------------
-
 class run(EOS, HydrodynamicalEquations):
     '''
     Orchestrates the mass-radius computation over a range of central baryon

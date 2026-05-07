@@ -37,13 +37,6 @@ from matplotlib import rcParams
 
 from EOSNeutronStars import run
 
-# ---------------------------------------------------------------------------
-# EOS catalogue
-# Each entry: (index, label, t0, colour, linestyle)
-# Analytic EOS use solid lines; tabulated EOS use dashed to distinguish origin.
-# t0 is EOS-specific per the solver documentation.
-# ---------------------------------------------------------------------------
-
 EOS_CATALOGUE = [
     (1, 'AV14+UVII', 0.5,   '#2E5FA3', '-' ),   # steel blue   — analytic
     (2, 'UV14-UVII', 0.5,   '#D95F02', '-' ),   # burnt orange — analytic
@@ -57,10 +50,7 @@ H  = 0.0007
 R0 = 0.0
 U0 = 0.0
 
-# ---------------------------------------------------------------------------
 # Compute all EOS
-# ---------------------------------------------------------------------------
-
 print("=" * 55)
 print("  Neutron Star Mass-Radius — computing all EOS")
 print("=" * 55)
@@ -76,17 +66,8 @@ for (i, label, t0, color, ls) in EOS_CATALOGUE:
 
 print("\nAll EOS computed. Generating plots...\n")
 
-# ---------------------------------------------------------------------------
-# Publication rcParams
-# Targets a single-column journal figure (7 x 5 in).
-# Uses LaTeX / Computer Modern for typography consistent with a physics
-# manuscript. Ticks are inward on all four sides with minor ticks enabled.
-# ---------------------------------------------------------------------------
 
 rcParams.update({
-    # Font — uses matplotlib's built-in math renderer (no LaTeX installation required).
-    # Switch text.usetex to True and set font.serif to ['Computer Modern Roman']
-    # if a LaTeX distribution (MacTeX / texlive) is available for native-quality output.
     'text.usetex'        : False,
     'font.family'        : 'serif',
     'font.serif'         : ['DejaVu Serif'],
@@ -129,10 +110,6 @@ rcParams.update({
     'figure.dpi'          : 150,
 })
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
 def _apply_minor_ticks(ax):
     '''Enable minor ticks on both axes.'''
     ax.minorticks_on()
@@ -150,10 +127,7 @@ def _eos_legend_handles(solvers):
     ]
 
 
-# ---------------------------------------------------------------------------
 # Figure 1 — Mass vs. central baryon density
-# ---------------------------------------------------------------------------
-
 fig1, ax1 = plt.subplots(figsize=(7, 5))
 
 for i, (solver, label, color, ls) in solvers.items():
@@ -169,10 +143,8 @@ fig1.tight_layout()
 fig1.savefig('mass_n0_all.pdf')
 print("Saved: mass_n0_all.pdf")
 
-# ---------------------------------------------------------------------------
-# Figure 2 — Radius vs. central baryon density
-# ---------------------------------------------------------------------------
 
+# Figure 2 — Radius vs. central baryon density
 fig2, ax2 = plt.subplots(figsize=(7, 5))
 
 for i, (solver, label, color, ls) in solvers.items():
@@ -188,10 +160,7 @@ fig2.tight_layout()
 fig2.savefig('radius_n0_all.pdf')
 print("Saved: radius_n0_all.pdf")
 
-# ---------------------------------------------------------------------------
 # Figure 3 — Mass vs. radius  (+ observational constraints)
-# ---------------------------------------------------------------------------
-
 fig3, ax3 = plt.subplots(figsize=(7, 5))
 
 for i, (solver, label, color, ls) in solvers.items():
@@ -247,9 +216,5 @@ _apply_minor_ticks(ax3)
 fig3.tight_layout()
 fig3.savefig('mass_radius_all.pdf')
 print("Saved: mass_radius_all.pdf")
-
-# ---------------------------------------------------------------------------
-# Display
-# ---------------------------------------------------------------------------
 
 plt.show()

@@ -40,10 +40,7 @@ from matplotlib import rcParams
 
 from EOSNeutronStars import run
 
-# ---------------------------------------------------------------------------
 # Study parameters
-# ---------------------------------------------------------------------------
-
 STEP_SIZES = [0.05, 0.01, 0.005, 0.001, 0.0005, 0.0001]   # h values, coarse → fine
 
 R0 = 0.0
@@ -54,11 +51,6 @@ I   = 1      # AV14+UVII
 # Convergence threshold for the fractional-change plot annotation
 THRESHOLD = 0.001   # 0.1 %
 
-# ---------------------------------------------------------------------------
-# Colour map — one colour per step size, dark → light as h decreases
-# (coarse runs are dark, fine runs are light so the converged curve is clear)
-# ---------------------------------------------------------------------------
-
 COLOURS = {
     0.0500 : '#1A1A2E',   # Deep Navy (Base)
     0.0100 : '#253B5E',   # Dark Steel Blue
@@ -67,10 +59,6 @@ COLOURS = {
     0.0005 : '#82B1D3',   # Soft Sky Blue
     0.0001 : '#B0D4EC',   # Pale Ice Blue
 }
-
-# ---------------------------------------------------------------------------
-# Publication rcParams
-# ---------------------------------------------------------------------------
 
 rcParams.update({
     'text.usetex'        : False,
@@ -110,10 +98,6 @@ rcParams.update({
     'figure.dpi'         : 150,
 })
 
-# ---------------------------------------------------------------------------
-# Helper — extract maximum mass and its corresponding radius
-# ---------------------------------------------------------------------------
-
 def peak_mass_and_radius(solver):
     '''
     Extracts the maximum mass and its corresponding radius from a completed
@@ -130,10 +114,6 @@ def peak_mass_and_radius(solver):
     M_max = solver.m[idx]
     R_max = solver.r[idx]
     return M_max, R_max
-
-# ---------------------------------------------------------------------------
-# Run solver at each step size and collect results
-# ---------------------------------------------------------------------------
 
 print("=" * 58)
 print("  Convergence study — AV14+UVII (i=1)")
@@ -155,9 +135,6 @@ for h in STEP_SIZES:
     }
     print(f"    M_max = {M_max:.4f} M_sun   R(M_max) = {R_max:.4f} km")
 
-# ---------------------------------------------------------------------------
-# Convergence table — printed to stdout
-# ---------------------------------------------------------------------------
 
 print("\n" + "=" * 74)
 print(f"  {'h':>10}  {'M_max [M_sun]':>15}  {'R(M_max) [km]':>15}  "
@@ -185,12 +162,6 @@ for k, h in enumerate(h_list):
 print("=" * 74)
 print(f"  ✓ = fractional change in M_max below {THRESHOLD*100:.1f}% threshold\n")
 
-# ---------------------------------------------------------------------------
-# Figure 1 — Mass-radius curves for all step sizes
-# ---------------------------------------------------------------------------
-# ---------------------------------------------------------------------------
-# Unified Figure — Mass-radius curves and Convergence Study
-# ---------------------------------------------------------------------------
 
 # Create a figure with 1 row and 2 columns
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))

@@ -30,9 +30,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.interpolate import CubicSpline
 
-# ---------------------------------------------------------------------------
-# Data loading
-# ---------------------------------------------------------------------------
 
 # Column indices within the EOS table files
 _E_col = 4   # Energy per baryon [MeV]
@@ -40,20 +37,16 @@ _n_col = 1   # Baryon density    [fm^-3]
 
 # APR EoS — rows below start_APR are below the regime of interest
 _start_APR = 916
-_data_APR  = np.transpose(np.array(pd.read_csv('/Users/vishalsudhakar/Documents/classes/Spring 2026/computational_astrophysics/final-project/neutron-stars/tabulated-eos/eos_APR.table', header=None)))
+_data_APR  = np.transpose(np.array(pd.read_csv('/neutron-stars/tabulated-eos/eos_APR.table', header=None)))
 _E_APR_raw = _data_APR[_E_col][_start_APR:]   # MeV
 _n_APR_raw = _data_APR[_n_col][_start_APR:]   # fm^-3
 
 # RG EoS
 _start_RG  = 823
-_data_RG   = np.transpose(np.array(pd.read_csv('/Users/vishalsudhakar/Documents/classes/Spring 2026/computational_astrophysics/final-project/neutron-stars/tabulated-eos/eos_RG.table', header=None)))
+_data_RG   = np.transpose(np.array(pd.read_csv('/neutron-stars/tabulated-eos/eos_RG.table', header=None)))
 _E_RG_raw  = _data_RG[_E_col][_start_RG:]     # MeV
 _n_RG_raw  = _data_RG[_n_col][_start_RG:]     # fm^-3
 
-
-# ---------------------------------------------------------------------------
-# Finite-difference derivative construction
-# ---------------------------------------------------------------------------
 
 class DiscretizedDerivatives:
     '''
@@ -129,10 +122,6 @@ class DiscretizedDerivatives:
         return d2E_dn2[1:N - 1]   # exclude edge points
 
 
-# ---------------------------------------------------------------------------
-# Pre-compute derivatives and trim edge points from raw tables
-# ---------------------------------------------------------------------------
-
 _dd = DiscretizedDerivatives
 
 dE_dn_APR   = _dd.first_derivative(_E_APR_raw, _n_APR_raw)
@@ -148,10 +137,6 @@ E_APR = _E_APR_raw[1:-1]
 n_RG  = _n_RG_raw[1:-1]
 E_RG  = _E_RG_raw[1:-1]
 
-
-# ---------------------------------------------------------------------------
-# Interpolation methods
-# ---------------------------------------------------------------------------
 
 class Interpolator:
     '''
@@ -209,20 +194,11 @@ class Interpolator:
         cs = CubicSpline(x=x_i, y=y_i, bc_type='natural')
         return cs(x_target)
 
-# ---------------------------------------------------------------------------
-# Pre-built cubic spline objects (constructed once at import time for efficiency)
-# ---------------------------------------------------------------------------
-
 _bc_type = 'not-a-knot'
 
 _CS_APR = CubicSpline(x=n_APR, y=E_APR, bc_type=_bc_type)
 _CS_RG  = CubicSpline(x=n_RG,  y=E_RG,  bc_type=_bc_type)
 
-
-# ---------------------------------------------------------------------------
-# Public interpolated EOS functions
-# These functions are imported and called by EOS in the main solver.
-# ---------------------------------------------------------------------------
 
 def E_linear_interpolated(n_target, eos):
     '''
@@ -343,10 +319,6 @@ def d2E_dn2_cubic_interpolated(n_target, eos):
 
     return interpolator.derivative(nu=2)(n_target)
 
-
-# ---------------------------------------------------------------------------
-# Plotting utility
-# ---------------------------------------------------------------------------
 class InterpolationPlotter:
     '''
     Utility class for visualising the interpolated EOS functions E(n), dE/dn,
